@@ -17,7 +17,7 @@ namespace LibRgxC
 
         public Selection(string value)
         {
-            this.Value = value;
+            this.Value = value.Replace("\r\n", "\n").Replace("\r","\n");
             this._len = value.Length;
         }
 
@@ -31,6 +31,33 @@ namespace LibRgxC
                 cursel = cursel.Parent;
             }
             return curoff;
+        }
+
+        public Tuple<int,int,string> GetLoc(int off = 0, int around=10)
+        {
+            int curoff = _off + off;
+            Selection cursel = this;
+            while (cursel.Parent != null)
+            {
+                curoff += cursel.Parent._off;
+                cursel = cursel.Parent;
+            }
+
+            string fullval = cursel.Value;
+            string preview = (fullval.Substring(Math.Max(0, curoff - around), Math.Min(around,curoff))+"^"+ fullval.Substring(curoff, Math.Min(around,fullval.Length-curoff))).Replace("  ","").Replace("\n","");
+
+            int curLineno = 1;
+            int lasti = 0;
+            int i = 0;
+            for(i = 0; i < fullval.Length && i <curoff; i++)
+            {
+                if (fullval[i] == '\n')
+                {
+                    curLineno += 1;
+                    lasti = i;
+                }
+            }
+            return new Tuple<int, int, string>(curLineno,i-lasti,preview);
         }
 
         public List<Selection> GetAfter(int index)
@@ -65,7 +92,10 @@ namespace LibRgxC
             {
                 foreach(Selection sel in this.Parent.GetAfter(this._off + this._len))
                 {
-                    sel._off += q;
+                    if (sel != this)
+                    {
+                        sel._off += q;
+                    }
                 }
                 string parentval = this.Parent.Value.Remove(this._off, this._len).Insert(this._off, repl);
                 this.Parent.Replace(parentval);
