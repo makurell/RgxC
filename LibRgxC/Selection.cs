@@ -21,10 +21,18 @@ namespace LibRgxC
             this._len = value.Length;
         }
 
-        //public int GetAbs()
-        //{
+        public int GetAbs(int off=0)
+        {
+            int curoff = _off+off;
+            Selection cursel = this;
+            while (cursel.Parent != null)
+            {
+                curoff += cursel.Parent._off;
+                cursel = cursel.Parent;
+            }
+            return curoff;
+        }
 
-        //}
         public List<Selection> GetAfter(int index)
         {
             List<Selection> ret = new List<Selection>();
@@ -61,17 +69,6 @@ namespace LibRgxC
                 }
                 string parentval = this.Parent.Value.Remove(this._off, this._len).Insert(this._off, repl);
                 this.Parent.Replace(parentval);
-                //this.Parent._len += q;
-
-                //Selection curParent = this.Parent;
-                //int curoff = 0;
-                //while (curParent != null)
-                //{
-                //    curParent.Value = curParent.Value.Remove(curoff + this._off, this._len);
-                //    curParent.Value = curParent.Value.Insert(curoff + this._off, repl);
-                //    curoff += curParent._off;
-                //    curParent = curParent.Parent;
-                //}
             }
             this._len += q;
         }
