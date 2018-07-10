@@ -54,5 +54,9 @@
       <Name>LibRgxC</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="HelpfulFiles\ASLexer.txt" />
+    <Content Include="HelpfulFiles\Grammar.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

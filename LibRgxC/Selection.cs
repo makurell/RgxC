@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LibRgxC
 {
-    public class Selection
+    public partial class Selection
     {
         public string Value = string.Empty;
         public Selection Parent = null;
