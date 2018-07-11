@@ -8,7 +8,7 @@ namespace RgxCTests
     public class BasicSelectionTest
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Test1()
         {
             Selection s = new Selection("hello this is a test");//hello this is a test
             Assert.AreEqual("hello this is a test", s.Value);

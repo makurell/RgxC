@@ -82,7 +82,7 @@ namespace LibRgxC
             return ret;
         }
 
-        public void Replace(string repl)
+        public virtual void Replace(string repl)
         {
             //actual str manip
             Value = repl;
