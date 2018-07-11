@@ -80,9 +80,11 @@ namespace LibRgxC
 
         public Selection Sel(int off, int len)
         {
-            Selection ret = new Selection(Value.Substring(off, len));
-            ret._off = off;
-            ret.Parent = this;
+            Selection ret = new Selection(Value.Substring(off, len))
+            {
+                _off = off,
+                Parent = this
+            };
             this.Children.Add(ret);
             return ret;
         }

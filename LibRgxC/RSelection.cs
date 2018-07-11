@@ -9,7 +9,6 @@ namespace LibRgxC
 {
     public class RSelection : Selection
     {
-        //private GroupCollection _groups = null;
         private List<Selection> _groups = null;
         private string[] _groupnames = null;
 
@@ -30,15 +29,11 @@ namespace LibRgxC
 
         public Selection Group(int groupnum)
         {
-            //Group g = _groups[groupnum];
-            //return Sel(g.Index-this._off, g.Length);
             return _groups[groupnum];
         }
 
         public Selection Group(string groupname)
         {
-            //Group g = _groups[groupname];
-            //return Sel(g.Index - this._off, g.Length);
             int i;
             for(i =0; i < _groupnames.Length; i++)
             {

@@ -28,9 +28,10 @@ namespace LibRgxC
 
         internal RSelection Match(Regex regex, Match match)
         {
-            RSelection ret = new RSelection(regex,match);
-            //ret._off = match.Index;
-            ret.Parent = this;
+            RSelection ret = new RSelection(regex, match)
+            {
+                Parent = this
+            };
             this.Children.Add(ret);
             return ret;
         }

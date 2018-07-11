@@ -17,7 +17,7 @@ namespace RgxCTests
         {
             Selection s = new Selection("she said to slad the shed");
             s.Replace((string input) => { return input.ToUpper() + "she said to slad the shed"; });
-            s.Matches(@"s(?<ac>\w*)d", RegexOptions.IgnoreCase)[0].Replace("$$1$1${1}1${ac}$&$$${0}$0");//ambiguos overload!! (params string[]) or (string)
+            s.Matches(@"s(?<ac>\w*)d", RegexOptions.IgnoreCase)[0].Replace("$$1$1${1}1${ac}$&$$${0}$0");//fixed overload ambiguity
             Assert.AreEqual("SHE $1AIAI1AISAID$SAIDSAID TO SLAD THE SHEDshe said to slad the shed", s.Value);
         }
 

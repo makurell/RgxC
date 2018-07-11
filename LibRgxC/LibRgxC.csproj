@@ -40,10 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\ReplacementException.cs" />
     <Compile Include="RSelection.cs" />
     <Compile Include="Selection.cs" />
-    <Compile Include="SelectionOld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Selection_Ext.cs" />
   </ItemGroup>
