@@ -19,6 +19,7 @@ namespace LibRgxC
 
         public RSelection(Regex regex, Match match) : base(match.Value)
         {
+            this._off = match.Index;
             _groupnames = regex.GetGroupNames();
             _groups = new List<Selection>();
             foreach(Group g in match.Groups)
@@ -39,7 +40,7 @@ namespace LibRgxC
             //Group g = _groups[groupname];
             //return Sel(g.Index - this._off, g.Length);
             int i;
-            for(i =0; i < groupname.Length; i++)
+            for(i =0; i < _groupnames.Length; i++)
             {
                 if (_groupnames[i] == groupname)
                 {
@@ -50,7 +51,7 @@ namespace LibRgxC
         }
 
         /// <summary>
-        /// can use $n, ${x}, $&, $$. Invalid sub will insert nothing
+        /// can use $n, ${x}, $&, $$. Invalid sub will throw error
         /// </summary>
         public override void Replace(string s)
         {
@@ -102,7 +103,7 @@ namespace LibRgxC
         /// <summary>
         /// replace per group. No substitutions
         /// </summary>
-        public void Replace(params string[] replacements)
+        public void Replace(string[] replacements)
         {
             int i = 0;
             foreach(string repl in replacements)
@@ -118,7 +119,7 @@ namespace LibRgxC
         /// <summary>
         /// replace per group. No substitutions
         /// </summary>
-        public void Replace(params ReplaceDelegate[] dels)
+        public void Replace(ReplaceDelegate[] dels)
         {
             int i = 0;
             foreach (ReplaceDelegate repl in dels)
