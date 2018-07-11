@@ -10,9 +10,10 @@ namespace RgxC
 {
     class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
-            
+            new TranslatorDisplay().ShowDialog();
         }
     }
 }

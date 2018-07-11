@@ -15,6 +15,9 @@ namespace LibRgxC
         internal int _off = 0;
         internal int _len = 0;
 
+        public int Off { get { return _off; } }
+        public int Len { get { return _len; } }
+
         public Selection(string value)
         {
             this.Value = value.Replace("\r\n", "\n").Replace("\r", "\n");

@@ -34,6 +34,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,6 +46,14 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Translator.cs" />
+    <Compile Include="TranslatorDisplay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TranslatorDisplay.Designer.cs">
+      <DependentUpon>TranslatorDisplay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Translators\TestTranslator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -57,6 +67,11 @@
   <ItemGroup>
     <Content Include="HelpfulFiles\ASLexer.txt" />
     <Content Include="HelpfulFiles\Grammar.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TranslatorDisplay.resx">
+      <DependentUpon>TranslatorDisplay.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
