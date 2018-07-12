@@ -43,16 +43,17 @@ namespace RgxC.Translators
                 {
                     {"key", (Selection sel) =>
                         {
-                            return "public static string "+sel.Value;
+                            return "public static string "+sel.Value+" = "+@"""(?{"+sel.Value+@"}""+";
                         }},
                     {"equals", (Selection sel) =>
                         {
-                            return "=";
+                            return "";
+                            //return "= \"(?<"+block.Group("key").Value+">\"+";
                         }},
                     {"block", (Selection sel) =>
                         {
                             TranslateBlock(sel);
-                            return sel.Value;
+                            return sel.Value+"+\")\"";
                         }},
                 });
             }
