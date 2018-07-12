@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace RgxC.ASTranslator
@@ -81,6 +82,11 @@ namespace RgxC.ASTranslator
 
         public static string e(string s)
         {
+            return Regex.Escape(s);
+        }
+
+        public static string e1(string s)
+        {
             if (s == null || s.Length == 0)
             {
                 return "";
@@ -120,33 +126,6 @@ namespace RgxC.ASTranslator
                         break;
                     case '\r':
                         sb.Append("\\r");
-                        break;
-                    case '.':
-                        sb.Append("\\.");
-                        break;
-                    case '[':
-                        sb.Append("\\[");
-                        break;
-                    case ']':
-                        sb.Append("\\]");
-                        break;
-                    case '(':
-                        sb.Append("\\(");
-                        break;
-                    case ')':
-                        sb.Append("\\)");
-                        break;
-                    case '{':
-                        sb.Append("\\{");
-                        break;
-                    case '}':
-                        sb.Append("\\}");
-                        break;
-                    case '$':
-                        sb.Append("\\$");
-                        break;
-                    case '^':
-                        sb.Append("\\^");
                         break;
                     default:
                         if (c < ' ')
