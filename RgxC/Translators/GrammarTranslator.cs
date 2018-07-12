@@ -23,7 +23,7 @@ namespace RgxC.Translators
         }
         public override void Debug(Selection curSelection)
         {
-            Thread.Sleep(1000);
+            Thread.Sleep(100);
             base.Debug(curSelection);
         }
         public override Selection GetRoot()
@@ -125,14 +125,18 @@ namespace RgxC.Translators
                 {
                     //optional
                     sb.Append("o(");
-                    sb.Append(TranslateChoice(part.Sel(1,val.Length-2)));
+                    TranslateBlock(part.Sel(1, val.Length - 2));
+                    sb.Append(part.Value.Substring(1, part.Value.Length - 2));
+                    //sb.Append(TranslateChoice(part.Sel(1,val.Length-2)));
                     sb.Append(")");
                 }
                 else if (val.StartsWith("{") && val.EndsWith("}"))
                 {
                     //repeated
                     sb.Append("r(");
-                    sb.Append(TranslateChoice(part.Sel(1, val.Length - 2)));
+                    TranslateBlock(part.Sel(1, val.Length - 2));
+                    sb.Append(part.Value.Substring(1,part.Value.Length-2));
+                    //sb.Append(TranslateChoice(part.Sel(1, val.Length - 2)));
                     sb.Append(")");
                 }
                 else
