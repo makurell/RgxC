@@ -12,17 +12,17 @@ namespace RgxC.ASTranslator
         public const string WS = @"(?:\s|\/\/.*?\n|\/[*].*?[*]\/)+";
         public const string IDENTIFIER = @"[$a-zA-Z_][a-zA-Z0-9_]*";
 
-        public static string compilationUnit = b(packageDeclaration,
-            e("{"), directives, compilationUnitDeclaration, e("}"));
-        public static string packageDeclaration = b("package", o(qualifiedIde));
-        private static string qualifiedIde = b(IDENTIFIER, r(b(e("."), IDENTIFIER)));
-        private static string directives = r(directive);
-        private static string directive = c(
-            b("import",type,o(b(e("."),e("*")))),
-            b(e("["),IDENTIFIER,c(e("("),annotationFields,e(")")),e("]")),
-            b("use",IDENTIFIER,type),
-            b(";"));
-        private static string compilationUnitDeclaration = c(classDeclaration,memberDeclaration);
+        //public static string compilationUnit = b(packageDeclaration,
+        //    e("{"), directives, compilationUnitDeclaration, e("}"));
+        //public static string packageDeclaration = b("package", o(qualifiedIde));
+        //private static string qualifiedIde = b(IDENTIFIER, r(b(e("."), IDENTIFIER)));
+        //private static string directives = r(directive);
+        //private static string directive = c(
+        //    b("import",type,o(b(e("."),e("*")))),
+        //    b(e("["),IDENTIFIER,c(e("("),annotationFields,e(")")),e("]")),
+        //    b("use",IDENTIFIER,type),
+        //    b(";"));
+        //private static string compilationUnitDeclaration = c(classDeclaration,memberDeclaration);
 
         #region builder methods
         public static string b(params string[] parts)

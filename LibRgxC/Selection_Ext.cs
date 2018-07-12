@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace LibRgxC
 {
-    public delegate string ReplaceDelegate(string input);
+    public delegate string ReplaceDelegate(Selection input);
 
     public partial class Selection
     {
@@ -48,7 +48,7 @@ namespace LibRgxC
 
         public void Replace(ReplaceDelegate del)
         {
-            Replace(del?.Invoke(this.Value));
+            Replace(del?.Invoke(this));
         }
     }
 }

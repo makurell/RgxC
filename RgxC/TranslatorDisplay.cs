@@ -21,7 +21,7 @@ namespace RgxC
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _translator = new Translators.TestTranslator(textBox1.Text);
+            _translator = new Translators.GrammarTranslator(textBox1.Text);
             _translator.OnDebug += _translator_OnDebug;
             new System.Threading.Thread(() => { _translator.Translate(); }).Start();
             

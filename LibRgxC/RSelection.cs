@@ -23,7 +23,14 @@ namespace LibRgxC
             _groups = new List<Selection>();
             foreach(Group g in match.Groups)
             {
-                _groups.Add(Sel(g.Index - this._off, g.Length));
+                if (g.Success)
+                {
+                    _groups.Add(Sel(g.Index - this._off, g.Length));
+                }
+                else
+                {
+                    _groups.Add(null);
+                }
             }
         }
 
