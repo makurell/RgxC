@@ -14,7 +14,7 @@ namespace RgxC.ASTranslator
         public const string IDENTIFIER = @"[$a-zA-Z_][a-zA-Z0-9_]*";
 
         public const string STRING_LITERAL = @"""(\\\\|\\""|[^""])*""";
-        public const string REGEXP_LITERAL = @"/(\\\\|\\/|[^\n])*/[gisx]*";
+        public const string REGEXP_LITERAL = @"\/(\\\\|\\\/|[^\n])*\/[gisx]*";
         public const string INT_LITERAL = @"[0-9]+";
         public const string FLOAT_LITERAL = @"[0-9][0-9]*\.[0-9]+([eE][0-9]+)?[fd]?";
         public const string INFIX_OPERATOR = "=|\\*=|\\/=|%=|\\+=|\\-=|=|(>+)=|&=|\\^=|\\|=|\\|\\||&&|\\||\\^|&|==|!=|==(=+)|!==|(<+)|=|as|in|instanceof|is|>|(>+)|\\+|\\-|\\*|\\/|%";
