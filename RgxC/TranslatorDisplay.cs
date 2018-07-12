@@ -67,8 +67,10 @@ namespace RgxC
             }
             sb.Append("</body>\r\n</html>\r\n");
 
+
             this.Invoke(new Action(()=>{
                 webBrowser1.DocumentText = sb.ToString();
+                progressBar1.Value = (int)(selstart / (double)(total.Length) * 10000);
             }));
         }
     }

@@ -36,7 +36,7 @@ commaExpr ::=
 
 compilationUnit ::=  
     packageDeclaration  
-    "{" directives compilationUnitDeclaration "}"
+    "{" directives compilationUnitDeclaration "}";
 
 compilationUnitDeclaration ::=  
     classDeclaration  
@@ -88,7 +88,7 @@ fieldDeclaration ::=
     {"," identifierDeclaration };
 
 identifierDeclaration ::=  
-    IDENTIFIER [typeRelation] ["=" exprOrObjectLiteral]  
+    IDENTIFIER [typeRelation] ["=" exprOrObjectLiteral];
 
 
 labelableStatement ::=  

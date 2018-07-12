@@ -56,8 +56,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.textBox1);
-            this.splitContainer1.Size = new System.Drawing.Size(1084, 586);
-            this.splitContainer1.SplitterDistance = 425;
+            this.splitContainer1.Size = new System.Drawing.Size(1084, 588);
+            this.splitContainer1.SplitterDistance = 426;
             this.splitContainer1.TabIndex = 0;
             // 
             // webBrowser1
@@ -67,7 +67,7 @@
             this.webBrowser1.MinimumSize = new System.Drawing.Size(20, 20);
             this.webBrowser1.Name = "webBrowser1";
             this.webBrowser1.ScrollBarsEnabled = false;
-            this.webBrowser1.Size = new System.Drawing.Size(1084, 425);
+            this.webBrowser1.Size = new System.Drawing.Size(1084, 426);
             this.webBrowser1.TabIndex = 0;
             // 
             // textBox1
@@ -76,7 +76,7 @@
             this.textBox1.Location = new System.Drawing.Point(0, 0);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(1084, 157);
+            this.textBox1.Size = new System.Drawing.Size(1084, 158);
             this.textBox1.TabIndex = 0;
             this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
@@ -85,25 +85,28 @@
             this.panel1.Controls.Add(this.progressBar1);
             this.panel1.Controls.Add(this.button1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 586);
+            this.panel1.Location = new System.Drawing.Point(0, 588);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1084, 25);
+            this.panel1.Size = new System.Drawing.Size(1084, 23);
             this.panel1.TabIndex = 1;
             // 
             // progressBar1
             // 
             this.progressBar1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.progressBar1.Location = new System.Drawing.Point(0, 0);
+            this.progressBar1.Maximum = 10000;
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(1009, 25);
+            this.progressBar1.Size = new System.Drawing.Size(1011, 23);
+            this.progressBar1.Step = 1;
+            this.progressBar1.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.progressBar1.TabIndex = 0;
             // 
             // button1
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.button1.Location = new System.Drawing.Point(1009, 0);
+            this.button1.Location = new System.Drawing.Point(1011, 0);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 25);
+            this.button1.Size = new System.Drawing.Size(73, 23);
             this.button1.TabIndex = 1;
             this.button1.Text = "Go";
             this.button1.UseVisualStyleBackColor = true;
