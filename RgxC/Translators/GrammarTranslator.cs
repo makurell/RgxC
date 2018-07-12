@@ -23,7 +23,7 @@ namespace RgxC.Translators
         }
         public override void Debug(Selection curSelection)
         {
-            Thread.Sleep(100);
+            //Thread.Sleep(100);
             base.Debug(curSelection);
         }
         public override Selection GetRoot()

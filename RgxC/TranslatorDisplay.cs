@@ -40,7 +40,7 @@ namespace RgxC
         private void _translator_OnDebug(Selection selection)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("<!DOCTYPE html white-space:pre><html><head><script>function scroll(){document.getElementById(\"sel\").scrollIntoView(true);}</script><style>body{font-family: Arial;white-space:PRE;font-size: 12px;}</style></head><body>");
+            sb.Append("<!DOCTYPE html white-space:pre><html><head><script>function scroll(){document.getElementById(\"sel\").scrollIntoView(true);}</script><style>body{font-family: Consolas;white-space:PRE;font-size: 12px;}</style></head><body>");
             int selstart = selection.GetAbs();
             int len = selection.Len;
             string total = _translator.GetRoot().Value;
@@ -72,6 +72,11 @@ namespace RgxC
                 webBrowser1.DocumentText = sb.ToString();
                 progressBar1.Value = (int)(selstart / (double)(total.Length) * 10000);
             }));
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(_translator.GetRoot().Value);
         }
     }
 }
