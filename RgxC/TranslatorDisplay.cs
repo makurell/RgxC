@@ -26,19 +26,29 @@ namespace RgxC
             new System.Threading.Thread(() => { _translator.Translate(); }).Start();
             
         }
-
+        public static int LastBefore(string str, int index, int n, string match)
+        {
+            if (n == 1)
+            {
+                return Math.Max(0, str.Substring(0, index).LastIndexOf(match));
+            }
+            else
+            {
+                return LastBefore(str,Math.Max(0, str.Substring(0, index).LastIndexOf(match)),n-1,match);
+            }
+        }
         private void _translator_OnDebug(Selection selection)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("<!DOCTYPE html white-space:pre>\r\n<html>\r\n<head>\r\n<style>\r\nbody{\r\nfont-family: Arial;white-space:PRE;\r\nfont-size: 12px;\r\n}\r\n</style>\r\n</head>\r\n<body>");
+            sb.Append("<!DOCTYPE html white-space:pre><html><head><script>function scroll(){document.getElementById(\"sel\").scrollIntoView(true);}</script><style>body{font-family: Arial;white-space:PRE;font-size: 12px;}</style></head><body>");
             int selstart = selection.GetAbs();
             int len = selection.Len;
             string total = _translator.GetRoot().Value;
-            for(int i = 0; i < total.Length; i++)
+            for(int i = LastBefore(total,selstart,5,"\n"); i < total.Length; i++)
             {
                 if (i == selstart)
                 {
-                    sb.Append(@"<span style=""background-color:lightgray"">");
+                    sb.Append(@"<span id=""sel"" style=""background-color:lightgray"">");
                 }
                 char c = total[i];
                 switch (c)
@@ -56,7 +66,10 @@ namespace RgxC
                 }
             }
             sb.Append("</body>\r\n</html>\r\n");
-            webBrowser1.DocumentText = sb.ToString();
+
+            this.Invoke(new Action(()=>{
+                webBrowser1.DocumentText = sb.ToString();
+            }));
         }
     }
 }

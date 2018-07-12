@@ -11,6 +11,8 @@ namespace RgxC.Translators
     public class TestTranslator :Translator
     {
         public Regex rObject = new Regex(@"{([\s\S]+)}");
+        public Regex rKey = new Regex(@"\""(.+)\""\s*:");
+
         public Selection Root = null;
         public TestTranslator(string text)
         {
@@ -22,14 +24,15 @@ namespace RgxC.Translators
         }
         public override void Debug(Selection curSelection)
         {
-            System.Threading.Thread.Sleep(1000);
+            //System.Threading.Thread.Sleep(1000);
             base.Debug(curSelection);
         }
 
         public override string Translate()
         {
             TranslateObject(Root);
-            return "";
+            Debug(Root);
+            return Root.Value;
         }
 
         public void TranslateObject(Selection s)
@@ -41,6 +44,11 @@ namespace RgxC.Translators
         public void TranslateStatements(Selection s)
         {
             Debug(s);
+            s.Matches(rKey).ForEach(x =>
+            {
+                Debug(x);
+                x.Replace("\"lol\":");
+            });
         }
     }
 }

@@ -15,6 +15,7 @@ namespace RgxC
         public abstract string Translate();
         public virtual void Debug(Selection curSelection)
         {
+            System.Threading.Thread.Sleep(10);
             OnDebug?.Invoke(curSelection);
         }
     }
