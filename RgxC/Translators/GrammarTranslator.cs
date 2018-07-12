@@ -14,7 +14,7 @@ namespace RgxC.Translators
     {
         private static Regex rKey = new Regex(@"(?<key>\w+)\s*(?<equals>::=)");
         private static Regex rString = new Regex("\"(?<value>(\\\\\\\\|\\\\\"|[^\"])*)\"");
-        private static Regex rBlock = new Regex(rKey.ToString()+ @"(?<block>((("+rString.ToString()+ @")|\w+)\s*|[^;])+);");
+        private static Regex rBlock = new Regex(rKey.ToString()+ @"(?<block>((("+rString.ToString()+ @")|\w+)\s*|[^;])+)(?<semicolon>;)");
         private Selection Root = null;
 
         public GrammarTranslator(string value)
@@ -43,7 +43,7 @@ namespace RgxC.Translators
                 {
                     {"key", (Selection sel) =>
                         {
-                            return "public static string "+sel.Value+" = "+@"""(?{"+sel.Value+@"}""+";
+                            return "public static string "+sel.Value+" "/*+@"""(?{"+sel.Value+@"}""+";*/+"{get{return ";
                         }},
                     {"equals", (Selection sel) =>
                         {
@@ -53,8 +53,13 @@ namespace RgxC.Translators
                     {"block", (Selection sel) =>
                         {
                             TranslateBlock(sel);
-                            return sel.Value+"+\")\"";
+                            return sel.Value+/*"+\")\""*/";}}";
                         }},
+                    {"semicolon", (Selection sel) =>
+                        {
+                            return "";
+                        }},
+
                 });
             }
 

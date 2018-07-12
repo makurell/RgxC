@@ -14,7 +14,14 @@ namespace RgxC
         [STAThread]
         static void Main(string[] args)
         {
-            Console.WriteLine(Grammar.labelableStatement);
+            //Console.WriteLine(
+            //    Grammar.r(
+            //    Grammar.c(
+            //    Grammar.b("hello"),
+            //    Grammar.b("bye")
+            //    ))
+            //    );
+            Console.WriteLine(Grammar.compilationUnit);
             //new TranslatorDisplay().ShowDialog();
         }
     }

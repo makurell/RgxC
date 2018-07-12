@@ -67,8 +67,8 @@ expr ::=
   | lvalue  
   | anonFunctionExpr  
   | "this"  
+  | "new" type ["(" arguments ")"] 
   | parenthesizedExpr  
-  | "new" type ["(" arguments ")"]  
   | "delete" expr  
   | PREFIX_OPERATOR expr  
   | expr "as" type  
