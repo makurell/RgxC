@@ -1,4 +1,4 @@
-﻿using LibRgxC;
+﻿using LibSelection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,6 +13,8 @@ namespace RgxC
 {
     public partial class TranslatorDisplay : Form
     {
+        public bool fastMode = false;
+        public static string[] colours = new string[] { "indianred","hotpink","tomato","orchid","blueviolet","mediumslateblue","limegreen","mediumseagreen","steelblue","sandybrown"};
         Translator _translator = null;
         public TranslatorDisplay()
         {
@@ -23,7 +25,16 @@ namespace RgxC
         {
             _translator = new Translators.GrammarTranslator(textBox1.Text);
             _translator.OnDebug += _translator_OnDebug;
-            new System.Threading.Thread(() => { _translator.Translate(); }).Start();
+            new System.Threading.Thread(() => {
+                StringBuilder sb = new StringBuilder();
+                sb.Append("<!DOCTYPE html white-space:pre><html><head><script>function scroll(){document.getElementById(\"sel\").scrollIntoView(true);}</script><style>body{font-family: Consolas;white-space:PRE;font-size: 12px;}</style></head><body>");
+                sb.Append(_translator.Translate().Replace("\n","<br>"));
+                sb.Append("</body></html>");
+                this.Invoke(new Action(() =>
+                {
+                    webBrowser1.DocumentText = sb.ToString();
+                }));
+            }).Start();
             
         }
         public static int LastBefore(string str, int index, int n, string match)
@@ -37,41 +48,97 @@ namespace RgxC
                 return LastBefore(str,Math.Max(0, str.Substring(0, index).LastIndexOf(match)),n-1,match);
             }
         }
+        public static void GetDescendants(ref List<Selection> list, int depth, Selection s)
+        {
+            if (depth == 0) return;
+            foreach(Selection child in s.Children)
+            {
+                list.Add(child);
+                GetDescendants(ref list, depth-1, child);
+            }
+        }
         private void _translator_OnDebug(Selection selection)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append("<!DOCTYPE html white-space:pre><html><head><script>function scroll(){document.getElementById(\"sel\").scrollIntoView(true);}</script><style>body{font-family: Consolas;white-space:PRE;font-size: 12px;}</style></head><body>");
             int selstart = selection.GetAbs();
-            int len = selection.Len;
             string total = _translator.GetRoot().Value;
-            for(int i = LastBefore(total,selstart,5,"\n"); i < total.Length; i++)
+            StringBuilder sb=null;
+            if (!fastMode)
             {
-                if (i == selstart)
+                sb = new StringBuilder();
+
+                sb.Append("<!DOCTYPE html white-space:pre><html><head><script>function scroll(){document.getElementById(\"sel\").scrollIntoView(true);}</script><style>body{font-family: Consolas;white-space:PRE;font-size: 12px;}</style></head><body>");
+
+                int len = selection.Len;
+                //total = _translator.GetRoot().Value;
+                List<int> starts = new List<int>();
+                List<int> ends = new List<int>();
+                List<Selection> sels = new List<Selection>();
+                GetDescendants(ref sels, 1, _translator.GetRoot());
+                foreach (Selection child in sels)
                 {
-                    sb.Append(@"<span id=""sel"" style=""background-color:lightgray"">");
+                    int start = child.GetAbs();
+                    starts.Add(start);
+                    if (child.Len > 2)
+                    {
+                        ends.Add(start + child.Len - 1);
+                    }
                 }
-                char c = total[i];
-                switch (c)
+                starts.Sort();
+                starts.Reverse();
+
+                for (int i = LastBefore(total, selstart, 5, "\n"); i < total.Length; i++)
                 {
-                    case '\n':
-                        sb.Append(@"<br>");
-                        break;
-                    default:
-                        sb.Append(c);
-                        break;
+                    for (int j = 0; j < starts.Count; j++)
+                    {
+                        if (i == starts[j] && j != selstart)
+                        {
+                            sb.Append(@"<span id="""" style=""background-color:" + colours[j % colours.Length] + @""">");
+                            break;
+                        }
+                    }
+                    if (i == selstart)
+                    {
+                        sb.Append(@"<span id=""sel"" style=""background-color:lightgray"">");
+                    }
+                    char c = total[i];
+                    switch (c)
+                    {
+                        case '\n':
+                            sb.Append(@"<br>");
+                            break;
+                        default:
+                            sb.Append(c);
+                            break;
+                    }
+                    if (i == selstart + len - 1)
+                    {
+                        sb.Append(@"</span>");
+                    }
+                    foreach (int end in ends)
+                    {
+                        if (i == end && i != selstart + len - 1)
+                        {
+                            sb.Append(@"</span>");
+                            break;
+                        }
+                    }
                 }
-                if (i == selstart + len-1)
-                {
-                    sb.Append(@"</span>");
-                }
+
+                sb.Append("</body></html>");
+                System.Threading.Thread.Sleep(100);
             }
-            sb.Append("</body>\r\n</html>\r\n");
 
-
-            this.Invoke(new Action(()=>{
-                webBrowser1.DocumentText = sb.ToString();
-                progressBar1.Value = (int)(selstart / (double)(total.Length) * 10000);
-            }));
+            if (/*selstart % 50 < 5 || */!fastMode)
+            {
+                this.Invoke(new Action(() =>
+                {
+                    if (!fastMode)
+                    {
+                        webBrowser1.DocumentText = sb.ToString();
+                    }
+                    progressBar1.Value = (int)(selstart / (double)(total.Length) * 10000);
+                }));
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)

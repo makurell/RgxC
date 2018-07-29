@@ -1,4 +1,4 @@
-﻿using LibRgxC;
+﻿using LibSelection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,6 @@ namespace RgxC.Translators
         }
         public override void Debug(Selection curSelection)
         {
-            //System.Threading.Thread.Sleep(1000);
             base.Debug(curSelection);
         }
 

@@ -1,4 +1,4 @@
-﻿using LibRgxC;
+﻿using LibSelection;
 using RgxC.ASTranslator;
 using System;
 using System.Collections.Generic;
@@ -14,15 +14,7 @@ namespace RgxC
         [STAThread]
         static void Main(string[] args)
         {
-            //Console.WriteLine(
-            //    Grammar.r(
-            //    Grammar.c(
-            //    Grammar.b("hello"),
-            //    Grammar.b("bye")
-            //    ))
-            //    );
-            Console.WriteLine(Grammar.compilationUnit);
-            //new TranslatorDisplay().ShowDialog();
+            new TranslatorDisplay().ShowDialog();
         }
     }
 }

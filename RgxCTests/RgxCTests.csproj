@@ -56,9 +56,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibRgxC\LibRgxC.csproj">
+    <ProjectReference Include="..\LibSelection\LibSelection.csproj">
       <Project>{5790c8a5-1787-4664-9829-ab293968992a}</Project>
-      <Name>LibRgxC</Name>
+      <Name>LibSelection</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

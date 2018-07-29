@@ -62,12 +62,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LibRgxC\LibRgxC.csproj">
-      <Project>{5790c8a5-1787-4664-9829-ab293968992a}</Project>
-      <Name>LibRgxC</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="HelpfulFiles\ASLexer.txt" />
     <Content Include="HelpfulFiles\Grammar.txt" />
   </ItemGroup>
@@ -75,6 +69,12 @@
     <EmbeddedResource Include="TranslatorDisplay.resx">
       <DependentUpon>TranslatorDisplay.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LibSelection\LibSelection.csproj">
+      <Project>{5790c8a5-1787-4664-9829-ab293968992a}</Project>
+      <Name>LibSelection</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

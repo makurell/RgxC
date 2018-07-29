@@ -1,5 +1,5 @@
 ﻿using System;
-using LibRgxC;
+using LibSelection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace RgxCTests

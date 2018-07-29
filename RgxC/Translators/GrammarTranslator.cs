@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using LibRgxC;
+using LibSelection;
 using RgxC.ASTranslator;
 
 namespace RgxC.Translators
@@ -23,7 +23,6 @@ namespace RgxC.Translators
         }
         public override void Debug(Selection curSelection)
         {
-            //Thread.Sleep(100);
             base.Debug(curSelection);
         }
         public override Selection GetRoot()
