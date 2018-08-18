@@ -9,23 +9,15 @@ namespace RgxC.ASTranslator
 {
     public class ASTranslator : Translator
     {
-        Selection root = null;
         int index = 0;
 
-        public ASTranslator(string raw)
+        public ASTranslator(string raw) : base(raw)
         {
-            root = new Selection(raw);
         }
 
-        public override Selection GetRoot()
-        {
-            return this.root;
-        }
-
-        public override string Translate()
+        public override void Translate()
         {
             //if (!compilationUnit(root)) throw new ParsingException("Compilation Unit");
-            return root.Value;
         }
 
         //public bool readLiteral(string literal)

@@ -10,9 +10,13 @@ namespace RgxC
     public abstract class Translator
     {
         public event Action<Selection> OnDebug = null;
+        public Selection Root = null;
 
-        public abstract Selection GetRoot();
-        public abstract string Translate();
+        protected Translator(string input)
+        {
+            this.Root = new Selection(input);
+        }
+        public abstract void Translate();
         public virtual void Debug(Selection curSelection)
         {
             OnDebug?.Invoke(curSelection);

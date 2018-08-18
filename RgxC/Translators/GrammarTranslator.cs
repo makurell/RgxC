@@ -15,22 +15,17 @@ namespace RgxC.Translators
         private static Regex rKey = new Regex(@"(?<key>\w+)\s*(?<equals>::=)");
         private static Regex rString = new Regex("\"(?<value>(\\\\\\\\|\\\\\"|[^\"])*)\"");
         private static Regex rBlock = new Regex(rKey.ToString()+ @"(?<block>((("+rString.ToString()+ @")|\w+)\s*|[^;])+)(?<semicolon>;)");
-        private Selection Root = null;
 
-        public GrammarTranslator(string value)
+        public GrammarTranslator(string value) : base(value)
         {
-            Root = new Selection(value);
         }
+
         public override void Debug(Selection curSelection)
         {
             base.Debug(curSelection);
         }
-        public override Selection GetRoot()
-        {
-            return Root;
-        }
 
-        public override string Translate()
+        public override void Translate()
         {
             Debug(Root);
 
@@ -63,7 +58,6 @@ namespace RgxC.Translators
             }
 
             Debug(Root);
-            return Root.Value;
         }
 
         //private static Regex rChoice = new Regex("(?<choice>[^\\|]+)(\\||$)");

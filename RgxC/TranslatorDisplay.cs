@@ -26,9 +26,10 @@ namespace RgxC
             _translator = new Translators.GrammarTranslator(textBox1.Text);
             _translator.OnDebug += _translator_OnDebug;
             new System.Threading.Thread(() => {
+                _translator.Translate();
                 StringBuilder sb = new StringBuilder();
                 sb.Append("<!DOCTYPE html white-space:pre><html><head><script>function scroll(){document.getElementById(\"sel\").scrollIntoView(true);}</script><style>body{font-family: Consolas;white-space:PRE;font-size: 12px;}</style></head><body>");
-                sb.Append(_translator.Translate().Replace("\n","<br>"));
+                sb.Append(_translator.Root.Value.Replace("\n","<br>"));
                 sb.Append("</body></html>");
                 this.Invoke(new Action(() =>
                 {
@@ -60,7 +61,7 @@ namespace RgxC
         private void _translator_OnDebug(Selection selection)
         {
             int selstart = selection.GetAbs();
-            string total = _translator.GetRoot().Value;
+            string total = _translator.Root.Value;
             StringBuilder sb=null;
             if (!fastMode)
             {
@@ -73,7 +74,7 @@ namespace RgxC
                 List<int> starts = new List<int>();
                 List<int> ends = new List<int>();
                 List<Selection> sels = new List<Selection>();
-                GetDescendants(ref sels, 1, _translator.GetRoot());
+                GetDescendants(ref sels, 1, _translator.Root);
                 foreach (Selection child in sels)
                 {
                     int start = child.GetAbs();
@@ -143,7 +144,7 @@ namespace RgxC
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(_translator.GetRoot().Value);
+            Clipboard.SetText(_translator.Root.Value);
         }
     }
 }
