@@ -13,10 +13,6 @@ namespace RgxC.Translators
         public Regex rObject = new Regex(@"{([\s\S]+)}");
         public Regex rKey = new Regex(@"\""(.+)\""\s*:");
 
-        public TestTranslator(string text) : base(text)
-        {
-        }
-
         public override void Translate()
         {
             TranslateObject(Root);

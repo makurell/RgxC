@@ -13,9 +13,10 @@ namespace RgxC
         public Selection Root = null;
         public string Value { get { return Root.Value; } }
 
-        protected Translator(string input)
+        public virtual Translator Setup(string input)
         {
             this.Root = new Selection(input);
+            return this;
         }
         public abstract void Translate();
         public virtual void Debug(Selection curSelection)

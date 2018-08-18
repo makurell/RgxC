@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace RgxC.Translators
 {
-    public class SimpleASTranslator
+    public class SimpleASTranslator : Translator
     {
+        public override void Translate()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

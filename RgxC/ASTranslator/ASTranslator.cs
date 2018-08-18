@@ -9,11 +9,7 @@ namespace RgxC.ASTranslator
 {
     public class ASTranslator : Translator
     {
-        int index = 0;
-
-        public ASTranslator(string raw) : base(raw)
-        {
-        }
+        //int index = 0;
 
         public override void Translate()
         {

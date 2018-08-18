@@ -16,10 +16,6 @@ namespace RgxC.Translators
         private static Regex rString = new Regex("\"(?<value>(\\\\\\\\|\\\\\"|[^\"])*)\"");
         private static Regex rBlock = new Regex(rKey.ToString()+ @"(?<block>((("+rString.ToString()+ @")|\w+)\s*|[^;])+)(?<semicolon>;)");
 
-        public GrammarTranslator(string value) : base(value)
-        {
-        }
-
         public override void Debug(Selection curSelection)
         {
             base.Debug(curSelection);

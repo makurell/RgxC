@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace RgxC
 {
-    public partial class TranslatorDisplay : Form
+    public partial class TranslatorDisplay<T> : Form where T : Translator, new()
     {
         public bool fastMode = false;
         public static string[] colours = new string[] { "indianred","hotpink","tomato","orchid","blueviolet","mediumslateblue","limegreen","mediumseagreen","steelblue","sandybrown"};
@@ -23,7 +23,7 @@ namespace RgxC
 
         private void button1_Click(object sender, EventArgs e)
         {
-            _translator = new Translators.GrammarTranslator(textBox1.Text);
+            _translator = new T().Setup(textBox1.Text);
             _translator.OnDebug += _translator_OnDebug;
             new System.Threading.Thread(() => {
                 _translator.Translate();
