@@ -122,27 +122,30 @@ namespace RgxC.Translators
                 n("modifiers", r(MODIFIERS)),
                     n("constorvar", CONST_OR_VAR),
                     n("identifier",IDENTIFIER), o(b(":", n("type",c(e("*"),"void",QUALIFIED_IDE)))),
-                    o(b(n("equals","="), n("expr",r(c(STRING_LITERAL, REGEXP_LITERAL, "[^;]"))), n("semicolon",";")))
+                    o(b(n("equals","="), n("expr",r(c(STRING_LITERAL, REGEXP_LITERAL, "[^;]"))))),
+                    n("semicolon", ";")
                 );
+            Console.WriteLine(VARIABLE_DECLARATION);
             foreach (RSelection fieldDeclaration in Root.Matches(VARIABLE_DECLARATION))
             {
                 Debug(fieldDeclaration);
                 //translate words
                 fieldDeclaration.Replace(new Dictionary<string, ReplaceDelegate>
                 {
-                    //convert type to equivalent
+                    //convert type to equivalent //todo
                     {"type",(Selection input)=>
                     {
                         Debug(input);
                         switch (input.Value)
                         {
                             case "String": return "string";
+                            case "Boolean": return "bool";
                         }
                         return input.Value;
                     }},
                 });
                 //translate order
-                fieldDeclaration.Replace("${modifiers} ${constorvar} ${type} ${identifier} ${equals} ${expr} ${semicolon}");
+                fieldDeclaration.Replace("${modifiers} ${constorvar} ${type} ${identifier}${equals}${expr}${semicolon}");
             }
             #endregion
         }
