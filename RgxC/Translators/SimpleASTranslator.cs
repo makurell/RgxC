@@ -117,18 +117,34 @@ namespace RgxC.Translators
 
         public override void Translate()
         {
+            #region Variable Declarations
             string VARIABLE_DECLARATION = b(
                 n("modifiers", r(MODIFIERS)),
                     n("constorvar", CONST_OR_VAR),
                     n("identifier",IDENTIFIER), o(b(":", n("type",c(e("*"),"void",QUALIFIED_IDE)))),
-                    o(b(n("equals","="), n("expr",r(c(STRING_LITERAL, REGEXP_LITERAL, "[^;]"))), ";"))
+                    o(b(n("equals","="), n("expr",r(c(STRING_LITERAL, REGEXP_LITERAL, "[^;]"))), n("semicolon",";")))
                 );
-            //fieldDeclarations
             foreach (RSelection fieldDeclaration in Root.Matches(VARIABLE_DECLARATION))
             {
-                Console.WriteLine(fieldDeclaration.Value);
                 Debug(fieldDeclaration);
+                //translate words
+                fieldDeclaration.Replace(new Dictionary<string, ReplaceDelegate>
+                {
+                    //convert type to equivalent
+                    {"type",(Selection input)=>
+                    {
+                        Debug(input);
+                        switch (input.Value)
+                        {
+                            case "String": return "string";
+                        }
+                        return input.Value;
+                    }},
+                });
+                //translate order
+                fieldDeclaration.Replace("${modifiers} ${constorvar} ${type} ${identifier} ${equals} ${expr} ${semicolon}");
             }
+            #endregion
         }
     }
 }

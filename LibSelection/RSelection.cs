@@ -34,11 +34,24 @@ namespace LibSelection
             }
         }
 
+        /// <summary>
+        /// will return empty, isolated selection if invalid/out of range number
+        /// </summary>
         public Selection Group(int groupnum)
         {
-            return _groups[groupnum];
+            if (groupnum < _groups.Count)
+            {
+                return _groups[groupnum];
+            }
+            else
+            {
+                return new Selection(String.Empty);
+            }
         }
 
+        /// <summary>
+        /// will return empty, isolated selection if invalid/not recognised name
+        /// </summary>
         public Selection Group(string groupname)
         {
             int i;
@@ -46,14 +59,14 @@ namespace LibSelection
             {
                 if (_groupnames[i] == groupname)
                 {
-                    break;
+                    return _groups[i];
                 }
             }
-            return _groups[i];
+            return new Selection(String.Empty);
         }
 
         /// <summary>
-        /// can use $n, ${x}, $&, $$. Invalid sub will throw error
+        /// can use $n, ${x}, $&, $$. Not defined name will throw error. Sub with empty value/out of range sub will insert nothing.
         /// </summary>
         public override void Replace(string s)
         {
@@ -64,7 +77,8 @@ namespace LibSelection
                 {
                     if (Char.IsDigit(s[i + 1]))
                     {
-                        sb.Append(Group(Int32.Parse(""+s[i + 1])).Value);
+                        var g = Group(Int32.Parse("" + s[i + 1]));
+                        sb.Append(g != null ? g.Value.Trim() : String.Empty);
                         i += 1;
                     }else if (s[i + 1] == '{')
                     {
@@ -77,15 +91,18 @@ namespace LibSelection
                         int groupnum;
                         if (Int32.TryParse(x, out groupnum))
                         {
-                            sb.Append(Group(groupnum).Value);
+                            var g = Group(groupnum);
+                            sb.Append(g != null ? g.Value.Trim() : String.Empty);
                         }
                         else
                         {
-                            sb.Append(Group(x).Value);
+                            var g = Group(x);
+                            sb.Append(g != null ? g.Value.Trim() : String.Empty);
                         }
                     }else if (s[i + 1] == '&')
                     {
-                        sb.Append(Group(0).Value);
+                        var g = Group(0);
+                        sb.Append(g != null ? g.Value.Trim() : String.Empty);
                         i += 1;
                     }else if (s[i + 1] == '$')
                     {
