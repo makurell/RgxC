@@ -11,6 +11,7 @@ namespace RgxC
     {
         public event Action<Selection> OnDebug = null;
         public Selection Root = null;
+        public string Value { get { return Root.Value; } }
 
         protected Translator(string input)
         {

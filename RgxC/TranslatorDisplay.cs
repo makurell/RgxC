@@ -29,7 +29,7 @@ namespace RgxC
                 _translator.Translate();
                 StringBuilder sb = new StringBuilder();
                 sb.Append("<!DOCTYPE html white-space:pre><html><head><script>function scroll(){document.getElementById(\"sel\").scrollIntoView(true);}</script><style>body{font-family: Consolas;white-space:PRE;font-size: 12px;}</style></head><body>");
-                sb.Append(_translator.Root.Value.Replace("\n","<br>"));
+                sb.Append(_translator.Value.Replace("\n","<br>"));
                 sb.Append("</body></html>");
                 this.Invoke(new Action(() =>
                 {
@@ -61,7 +61,7 @@ namespace RgxC
         private void _translator_OnDebug(Selection selection)
         {
             int selstart = selection.GetAbs();
-            string total = _translator.Root.Value;
+            string total = _translator.Value;
             StringBuilder sb=null;
             if (!fastMode)
             {
@@ -144,7 +144,7 @@ namespace RgxC
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(_translator.Root.Value);
+            Clipboard.SetText(_translator.Value);
         }
     }
 }
