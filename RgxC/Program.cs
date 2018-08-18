@@ -15,7 +15,7 @@ namespace RgxC
         [STAThread]
         static void Main(string[] args)
         {
-            new TranslatorDisplay<GrammarTranslator>().ShowDialog();
+            new TranslatorDisplay<SimpleASTranslator>().ShowDialog();
         }
     }
 }
