@@ -13,25 +13,14 @@ namespace RgxC.Translators
         public Regex rObject = new Regex(@"{([\s\S]+)}");
         public Regex rKey = new Regex(@"\""(.+)\""\s*:");
 
-        public Selection Root = null;
-        public TestTranslator(string text)
+        public TestTranslator(string text) : base(text)
         {
-            Root = new Selection(text);
-        }
-        public override Selection GetRoot()
-        {
-            return Root;
-        }
-        public override void Debug(Selection curSelection)
-        {
-            base.Debug(curSelection);
         }
 
-        public override string Translate()
+        public override void Translate()
         {
             TranslateObject(Root);
             Debug(Root);
-            return Root.Value;
         }
 
         public void TranslateObject(Selection s)
