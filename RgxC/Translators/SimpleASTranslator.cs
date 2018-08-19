@@ -131,9 +131,10 @@ namespace RgxC.Translators
         #endregion
 
         #region building helper methods
-        public static string upto(char target)
+        /// <param name="plus">if true, cannot be empty</param>
+        public static string upto(char target,bool plus=false)
         {
-            return r(c(STRING_LITERAL, REGEXP_LITERAL, "[^"+target+"]"));
+            return r(c(STRING_LITERAL, REGEXP_LITERAL, "[^"+e(""+target)+"]"),plus);
         }
         #endregion
 
@@ -176,20 +177,10 @@ namespace RgxC.Translators
                     );
             }
         }
-        string PARAMETERS
-        {
-            get
-            {
-                return b(
-                    c(
-                        o(b(PARAMETER, r(b(",", PARAMETER), false))),
-                        b(o(b(PARAMETER, r(b(",", PARAMETER), false),",")),
-                            b(IDENTIFIER,o(TYPE_RELATION)))
-                     )
-                    );
-            }
-        }
-        string METHOD_DECLARATON
+        /// <summary>
+        /// modifiers, identifier, parameters, type, block
+        /// </summary>
+        string METHOD_OR_CONSTRUCTOR_DECLARATION
         {
             get
             {
@@ -199,12 +190,12 @@ namespace RgxC.Translators
                 o(c("get", "set")),
                 n("identifier", IDENTIFIER),
                 e("("),
-                PARAMETERS,
+                n("parameters",upto(')')),
                 e(")"),
-                TYPE_RELATION,
-                c(
-                    b("{",upto('}'),"}"),
-                    ";")
+                o(TYPE_RELATION),
+                n("block",
+                    c(b(e("{"),upto('}'),e("}")),
+                    ";"))
                 );
             }
         }
@@ -212,18 +203,19 @@ namespace RgxC.Translators
 
         public override void Translate()
         {
-            TranslateMethods();
-            TranslateVariables();
+            TranslateMethodOrConstructors(Root);
+            return;
+            TranslateVariables(Root);
         }
 
-        private void TranslateMethods()
+        private void TranslateMethodOrConstructors(Selection sel)
         {
-            Console.WriteLine(PARAMETER);
+            Console.WriteLine(METHOD_OR_CONSTRUCTOR_DECLARATION);
         }
 
-        public void TranslateVariables()
+        public void TranslateVariables(Selection sel)
         {
-            foreach (RSelection fieldDeclaration in Root.Matches(VARIABLE_DECLARATION))
+            foreach (RSelection fieldDeclaration in sel.Matches(VARIABLE_DECLARATION))
             {
                 Debug(fieldDeclaration);
                 //translate words
