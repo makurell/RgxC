@@ -12,7 +12,8 @@ namespace RgxC.Translators
     {
         public const string WS = @"\s*";
         public const string IDENTIFIER = @"[$a-zA-Z_][a-zA-Z0-9_]*";
-        public const string QUALIFIED_IDE = IDENTIFIER+"("+WS+"\\."+WS+IDENTIFIER+"|)";
+        public const string IDENTIFIER_EXT = IDENTIFIER+"|"+@"[\<\>\.]*";
+        public const string QUALIFIED_IDE = "((" + IDENTIFIER_EXT + ")" + WS + ")+";
 
         public const string STRING_LITERAL = @"""(\\\\|\\""|[^""])*""";
         public const string REGEXP_LITERAL = @"\/(\\\\|\\\/|[^\n])*\/[gisx]*";
