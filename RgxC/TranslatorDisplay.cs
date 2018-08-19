@@ -13,7 +13,8 @@ namespace RgxC
 {
     public partial class TranslatorDisplay<T> : Form where T : Translator, new()
     {
-        public bool fastMode = true;
+        public bool fastMode = false;
+        public bool autoMode = true;
         public static string[] colours = new string[] { "indianred","hotpink","tomato","orchid","blueviolet","mediumslateblue","limegreen","mediumseagreen","steelblue","sandybrown"};
         Translator _translator = null;
         public TranslatorDisplay()
@@ -160,7 +161,18 @@ namespace RgxC
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(_translator.Value);
+            if (!string.IsNullOrEmpty(_translator.Value))
+            {
+                Clipboard.SetText(_translator.Value);
+            }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            if (autoMode)
+            {
+                button1_Click(null, null);
+            }
         }
     }
 }

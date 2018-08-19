@@ -12,8 +12,8 @@ namespace RgxC.Translators
     {
         public const string WS = @"\s*";
         public const string IDENTIFIER = @"[$a-zA-Z_][a-zA-Z0-9_]*";
-        public const string IDENTIFIER_EXT = IDENTIFIER + "|" + @"[\<\>\.]*";
-        public const string QUALIFIED_IDE = "((" + IDENTIFIER_EXT + ")" + WS + ")+";
+        public const string IDENTIFIER_EXT = IDENTIFIER + "|" + @"[\<\>]*";
+        public const string QUALIFIED_IDE = "((" + IDENTIFIER_EXT + ")" + "("+WS+"\\."+WS+"|)" + ")+";
 
         public const string STRING_LITERAL = @"""(\\\\|\\""|[^""])*""";
         public const string REGEXP_LITERAL = @"\/(\\\\|\\\/|[^\n])*\/[gisx]*";
@@ -232,14 +232,56 @@ namespace RgxC.Translators
                     );
             }
         }
+        /// <summary>
+        /// modifiers, identifier, (extension)type, impls
+        /// </summary>
+        string CLASS_DECLARATION
+        {
+            get
+            {
+                return b(
+                    n("modifiers",MODIFIERS),"class",n("identifier",IDENTIFIER),
+                    o(b("extends",TYPE)),
+                    o(b("implements",n("impls",upto('{'))))
+                    );
+            }
+        }
         #endregion
 
         public override void Translate()
         {
-            TranslatePackage(Root);
+            //TranslatePackage(Root);
             TranslateDirectives(Root);
+            TranslateClassDeclaration(Root);
             TranslateVariables(Root);
             TranslateMethodOrConstructors(Root);
+        }
+
+        private void TranslateClassDeclaration(Selection sel)
+        {
+            foreach(RSelection classDeclaration in sel.Matches(CLASS_DECLARATION))
+            {
+                StringBuilder repl = new StringBuilder();
+                repl.Append("${modifiers} class ${identifier}");
+                StringBuilder inherits = new StringBuilder();
+                if (classDeclaration.Group("type") != Selection.Empty)
+                {
+                    inherits.Append(classDeclaration.Group("type").Value.Trim());
+                }
+                if (classDeclaration.Group("impls") != Selection.Empty)
+                {
+                    if (!String.IsNullOrWhiteSpace(inherits.ToString()))
+                    {
+                        inherits.Append(",");
+                    }
+                    inherits.Append(classDeclaration.Group("impls").Value.Trim());
+                }
+                if (!String.IsNullOrWhiteSpace(inherits.ToString()))
+                {
+                    repl.Append(":"+inherits.ToString());
+                }
+                classDeclaration.Replace(repl.ToString());
+            }
         }
 
         private void TranslateDirectives(Selection sel)

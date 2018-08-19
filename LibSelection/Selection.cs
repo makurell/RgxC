@@ -8,6 +8,8 @@ namespace LibSelection
 {
     public partial class Selection
     {
+        public static Selection Empty = new Selection(String.Empty);
+
         public string Value = string.Empty;
         public Selection Parent = null;
         public List<Selection> Children = new List<Selection>();

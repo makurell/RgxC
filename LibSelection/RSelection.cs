@@ -41,11 +41,12 @@ namespace LibSelection
         {
             if (groupnum < _groups.Count)
             {
-                return _groups[groupnum];
+                if (_groups[groupnum] != null) return _groups[groupnum];
+                else return Selection.Empty;
             }
             else
             {
-                return new Selection(String.Empty);
+                return Selection.Empty;
             }
         }
 
@@ -59,10 +60,11 @@ namespace LibSelection
             {
                 if (_groupnames[i] == groupname)
                 {
-                    return _groups[i];
+                    if (_groups[i] != null) return _groups[i];
+                    else return Selection.Empty;
                 }
             }
-            return new Selection(String.Empty);
+            return Selection.Empty;
         }
 
         /// <summary>
