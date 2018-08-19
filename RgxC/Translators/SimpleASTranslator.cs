@@ -146,7 +146,7 @@ namespace RgxC.Translators
                     }},
                 });
                 //translate order
-                fieldDeclaration.Replace("${modifiers} ${constorvar} ${type} ${identifier}${equals}${expr}${semicolon}");
+                fieldDeclaration.Replace("${modifiers} "+(fieldDeclaration.Group("constorvar").Value=="const"?"${constorvar} ":"")+"${type} ${identifier}${equals}${expr}${semicolon}");
             }
             #endregion
         }
