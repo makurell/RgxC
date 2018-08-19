@@ -88,12 +88,26 @@ namespace RgxC.Translators
         /// <summary>
         /// select part repeated
         /// </summary>
-        public static string r(string part)
+        public static string r(string part,bool plus=true)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("((");
             sb.Append(part);
-            sb.Append(")" + WS + ")+");
+            sb.Append(")" + WS + ")");
+            if (plus) sb.Append("+");
+            else sb.Append("*");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// wrap part in brackets
+        /// </summary>
+        public static string p(string part)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("(");
+            sb.Append(part);
+            sb.Append(")");
             return sb.ToString();
         }
 
@@ -116,17 +130,99 @@ namespace RgxC.Translators
         }
         #endregion
 
-        public override void Translate()
+        #region building helper methods
+        public static string upto(char target)
         {
-            #region Variable Declarations
-            string VARIABLE_DECLARATION = b(
+            return r(c(STRING_LITERAL, REGEXP_LITERAL, "[^"+target+"]"));
+        }
+        #endregion
+
+        #region regexes
+        /// <summary>
+        /// type
+        /// </summary>
+        string TYPE_RELATION
+        {
+            get { return b(":", n("type", c(e("*"), "void", QUALIFIED_IDE))); }
+        }
+        /// <summary>
+        /// modifiers, constorvar, identifier, equals, expr, semicolon
+        /// </summary>
+        string VARIABLE_DECLARATION
+        {
+            get
+            {
+                return b(
                 n("modifiers", r(MODIFIERS)),
                     n("constorvar", CONST_OR_VAR),
-                    n("identifier",IDENTIFIER), o(b(":", n("type",c(e("*"),"void",QUALIFIED_IDE)))),
-                    o(b(n("equals","="), n("expr",r(c(STRING_LITERAL, REGEXP_LITERAL, "[^;]"))))),
+                    n("identifier", IDENTIFIER), o(TYPE_RELATION),
+                    o(b(n("equals", "="), n("expr", upto(';')))),
                     n("semicolon", ";")
                 );
-            Console.WriteLine(VARIABLE_DECLARATION);
+            }
+        }
+        /// <summary>
+        /// identifier, type
+        /// </summary>
+        string PARAMETER
+        {
+            get
+            {
+                return b(
+                    o("const"),
+                    n("identifier",IDENTIFIER),
+                    o(TYPE_RELATION),
+                    o(b("=",upto(',')))
+                    );
+            }
+        }
+        string PARAMETERS
+        {
+            get
+            {
+                return b(
+                    c(
+                        o(b(PARAMETER, r(b(",", PARAMETER), false))),
+                        b(o(b(PARAMETER, r(b(",", PARAMETER), false),",")),
+                            b(IDENTIFIER,o(TYPE_RELATION)))
+                     )
+                    );
+            }
+        }
+        string METHOD_DECLARATON
+        {
+            get
+            {
+                return b(
+                n("modifiers", r(MODIFIERS)),
+                "function",
+                o(c("get", "set")),
+                n("identifier", IDENTIFIER),
+                e("("),
+                PARAMETERS,
+                e(")"),
+                TYPE_RELATION,
+                c(
+                    b("{",upto('}'),"}"),
+                    ";")
+                );
+            }
+        }
+        #endregion
+
+        public override void Translate()
+        {
+            TranslateMethods();
+            TranslateVariables();
+        }
+
+        private void TranslateMethods()
+        {
+            Console.WriteLine(PARAMETER);
+        }
+
+        public void TranslateVariables()
+        {
             foreach (RSelection fieldDeclaration in Root.Matches(VARIABLE_DECLARATION))
             {
                 Debug(fieldDeclaration);
@@ -146,9 +242,8 @@ namespace RgxC.Translators
                     }},
                 });
                 //translate order
-                fieldDeclaration.Replace("${modifiers} "+(fieldDeclaration.Group("constorvar").Value=="const"?"${constorvar} ":"")+"${type} ${identifier}${equals}${expr}${semicolon}");
+                fieldDeclaration.Replace("${modifiers} " + (fieldDeclaration.Group("constorvar").Value == "const" ? "${constorvar} " : "") + "${type} ${identifier}${equals}${expr}${semicolon}");
             }
-            #endregion
         }
     }
 }
