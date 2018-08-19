@@ -34,6 +34,7 @@ namespace RgxC
                 this.Invoke(new Action(() =>
                 {
                     webBrowser1.DocumentText = sb.ToString();
+                    if(this.fastMode)button2_Click(null, null);
                 }));
             }).Start();
             
