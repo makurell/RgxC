@@ -12,7 +12,7 @@ namespace RgxC.Translators
     {
         public const string WS = @"\s*";
         public const string IDENTIFIER = @"[$a-zA-Z_][a-zA-Z0-9_]*";
-        public const string IDENTIFIER_EXT = IDENTIFIER+"|"+@"[\<\>\.]*";
+        public const string IDENTIFIER_EXT = IDENTIFIER + "|" + @"[\<\>\.]*";
         public const string QUALIFIED_IDE = "((" + IDENTIFIER_EXT + ")" + WS + ")+";
 
         public const string STRING_LITERAL = @"""(\\\\|\\""|[^""])*""";
@@ -88,7 +88,7 @@ namespace RgxC.Translators
         /// <summary>
         /// select part repeated
         /// </summary>
-        public static string r(string part,bool plus=true)
+        public static string r(string part, bool plus = true)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append("((");
@@ -117,7 +117,7 @@ namespace RgxC.Translators
         public static string n(string name, string part)
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("(?<"+name+">" + part + ")");
+            sb.Append("(?<" + name + ">" + part + ")");
             return sb.ToString();
         }
 
@@ -132,9 +132,9 @@ namespace RgxC.Translators
 
         #region building helper methods
         /// <param name="plus">if true, cannot be empty</param>
-        public static string upto(char target,bool plus=false)
+        public static string upto(char target, bool plus = false)
         {
-            return r(c(STRING_LITERAL, REGEXP_LITERAL, "[^"+e(""+target)+"]"),plus);
+            return r(c(STRING_LITERAL, REGEXP_LITERAL, "[^" + e("" + target) + "]"), plus);
         }
         #endregion
 
@@ -144,7 +144,14 @@ namespace RgxC.Translators
         /// </summary>
         string TYPE_RELATION
         {
-            get { return b(":", n("type", c(e("*"), "void", QUALIFIED_IDE))); }
+            get { return b(":", TYPE); }
+        }
+        /// <summary>
+        /// type
+        /// </summary>
+        string TYPE
+        {
+            get { return n("type", c(e("*"), "void", QUALIFIED_IDE)); }
         }
         /// <summary>
         /// modifiers, constorvar, identifier, equals, expr, semicolon
@@ -199,12 +206,63 @@ namespace RgxC.Translators
                 );
             }
         }
+
+        /// <summary>
+        /// packageide
+        /// </summary>
+        string PACKAGE_DECLARATION
+        {
+            get
+            {
+                return b("package", n("packageide",o(QUALIFIED_IDE)));
+            }
+        }
+
+        /// <summary>
+        /// import
+        /// </summary>
+        string DIRECTIVE
+        {
+            get
+            {
+                //todo: annotationFields
+                return c(
+                    b(n("import","import"),TYPE,o(b(e("."),e("*")))),
+                    b("use",IDENTIFIER,TYPE)
+                    );
+            }
+        }
         #endregion
 
         public override void Translate()
         {
-            TranslateMethodOrConstructors(Root);
+            TranslatePackage(Root);
+            TranslateDirectives(Root);
             TranslateVariables(Root);
+            TranslateMethodOrConstructors(Root);
+        }
+
+        private void TranslateDirectives(Selection sel)
+        {
+            //todo more cases
+            foreach(RSelection directive in sel.Matches(DIRECTIVE))
+            {
+                if (directive.Value.Trim().StartsWith("import"))
+                {
+                    directive.Replace(new Dictionary<string, string>()
+                    {
+                        {"import", "using"}
+                    });
+                }
+            }
+        }
+
+        private void TranslatePackage(Selection sel)
+        {
+            foreach(RSelection package in sel.Matches(PACKAGE_DECLARATION))
+            {
+                package.Replace("namespace ${packageide}");
+            }
         }
 
         private void TranslateMethodOrConstructors(Selection sel)
@@ -253,6 +311,7 @@ namespace RgxC.Translators
                 case "String": return "string";
                 case "Boolean": return "bool";
             }
+            if (type.StartsWith("Vector.")) return type.Remove(6, 1);//remove the dot
             return type;
         }
 
