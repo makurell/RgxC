@@ -23,7 +23,7 @@ namespace RgxC.Translators
         public const string PREFIX_OPERATOR = "\\+\\+|\\-\\-|\\+|\\-|!|~|typeof";
         public const string POSTFIX_OPERATOR = "\\+\\+|\\-\\-";
 
-        public const string MODIFIERS = "public|protected|private|static|abstract|final|override|internal";
+        public const string MODIFIERS = "public|protected|private|static|abstract|final|override|internal|";//can be empty
         public const string CONST_OR_VAR = "const|var";
 
         #region builder methods
@@ -253,8 +253,8 @@ namespace RgxC.Translators
             //TranslatePackage(Root);
             TranslateDirectives(Root);
             TranslateClassDeclaration(Root);
-            TranslateVariables(Root);
             TranslateMethodOrConstructors(Root);
+            TranslateVariables(Root);
         }
 
         private void TranslateClassDeclaration(Selection sel)
@@ -309,6 +309,7 @@ namespace RgxC.Translators
 
         private void TranslateMethodOrConstructors(Selection sel)
         {
+            Console.WriteLine(METHOD_OR_CONSTRUCTOR_DECLARATION);
             foreach(RSelection mocDeclaration in sel.Matches(METHOD_OR_CONSTRUCTOR_DECLARATION))
             {
                 Debug(mocDeclaration);
@@ -320,10 +321,29 @@ namespace RgxC.Translators
                         TranslateParameters(input);
                         return input.Value;
                     }},
+                    {"type",(Selection input)=>
+                    {
+                        Debug(input);
+                        return TranslateType(input.Value);
+                    }},
+                    {"block",(Selection input)=>
+                    {
+                        Debug(input);
+                        TranslateBlock(input);
+                        return input.Value;
+                    }},
                 });
                 //translate order
-                mocDeclaration.Replace("${modifiers} ${type} ${identifier}(${parameters})${block}");
+                mocDeclaration.Replace("${modifiers} ${type} ${identifier}(${parameters})${block}\n");
             }
+        }
+
+        private void TranslateBlock(Selection sel)
+        {
+            //get inside the brackets
+            Selection block = sel.Match(b("{",n("block",upto('}')),"}")).Group("block");
+            TranslateVariables(block);
+            sel.Replace("{\n" + block.Value + "}");
         }
 
         private void TranslateParameters(Selection sel)
@@ -381,7 +401,7 @@ namespace RgxC.Translators
                     }},
                 });
                 //translate order
-                fieldDeclaration.Replace("${modifiers} " + (fieldDeclaration.Group("constorvar").Value == "const" ? "${constorvar} " : "") + "${type} ${identifier}${equals}${expr}${semicolon}");
+                fieldDeclaration.Replace("${modifiers} " + (fieldDeclaration.Group("constorvar").Value == "const" ? "${constorvar} " : "") + "${type} ${identifier}${equals}${expr}${semicolon}\n");
             }
         }
     }

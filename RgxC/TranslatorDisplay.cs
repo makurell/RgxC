@@ -13,7 +13,7 @@ namespace RgxC
 {
     public partial class TranslatorDisplay<T> : Form where T : Translator, new()
     {
-        public bool fastMode = false;
+        public bool fastMode = true;
         public bool autoMode = true;
         public static string[] colours = new string[] { "indianred","hotpink","tomato","orchid","blueviolet","mediumslateblue","limegreen","mediumseagreen","steelblue","sandybrown"};
         Translator _translator = null;
