@@ -107,6 +107,21 @@ namespace RgxC
                         case '\n':
                             sb.Append(@"<br>");
                             break;
+                        case '&':
+                            sb.Append(@"&amp");
+                            break;
+                        case '<':
+                            sb.Append(@"&lt");
+                            break;
+                        case '>':
+                            sb.Append(@"&gt");
+                            break;
+                        case '"':
+                            sb.Append(@"&quot");
+                            break;
+                        case '\'':
+                            sb.Append(@"&#39");
+                            break;
                         default:
                             sb.Append(c);
                             break;
