@@ -126,6 +126,7 @@ namespace RgxC.Translators
                     o(b(n("equals","="), n("expr",r(c(STRING_LITERAL, REGEXP_LITERAL, "[^;]"))))),
                     n("semicolon", ";")
                 );
+            Console.WriteLine(VARIABLE_DECLARATION);
             foreach (RSelection fieldDeclaration in Root.Matches(VARIABLE_DECLARATION))
             {
                 Debug(fieldDeclaration);

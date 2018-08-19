@@ -29,7 +29,7 @@ namespace RgxC
                 _translator.Translate();
                 StringBuilder sb = new StringBuilder();
                 sb.Append("<!DOCTYPE html white-space:pre><html><head><script>function scroll(){document.getElementById(\"sel\").scrollIntoView(true);}</script><style>body{font-family: Consolas;white-space:PRE;font-size: 12px;}</style></head><body>");
-                sb.Append(_translator.Value.Replace("\n","<br>"));
+                sb.Append(_translator.Value.Replace(@"&", @"&amp;").Replace(@"<", @"&lt;").Replace(@">", @"&gt;").Replace(@"'", @"&#39;").Replace(@"""", @"&quot;").Replace("\n", "<br>"));
                 sb.Append("</body></html>");
                 this.Invoke(new Action(() =>
                 {
