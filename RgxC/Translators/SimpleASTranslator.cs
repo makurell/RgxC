@@ -306,7 +306,7 @@ namespace RgxC.Translators
         //convert type to equivalent //todo
         public string TranslateType(string type)
         {
-            switch (type)
+            switch (type.Trim())
             {
                 case "String": return "string";
                 case "Boolean": return "bool";
@@ -326,6 +326,15 @@ namespace RgxC.Translators
                     {"type",(Selection input)=>
                     {
                         Debug(input);
+                        return TranslateType(input.Value);
+                    }},
+                    {"modifiers",(Selection input)=>
+                    {
+                        Debug(input);
+                        if (fieldDeclaration.Group("constorvar").Value.Trim() == "const")
+                        {
+                            return input.Value.Replace("static","");
+                        }
                         return TranslateType(input.Value);
                     }},
                 });
