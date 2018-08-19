@@ -204,13 +204,56 @@ namespace RgxC.Translators
         public override void Translate()
         {
             TranslateMethodOrConstructors(Root);
-            return;
             TranslateVariables(Root);
         }
 
         private void TranslateMethodOrConstructors(Selection sel)
         {
-            Console.WriteLine(METHOD_OR_CONSTRUCTOR_DECLARATION);
+            foreach(RSelection mocDeclaration in sel.Matches(METHOD_OR_CONSTRUCTOR_DECLARATION))
+            {
+                Debug(mocDeclaration);
+                //translate parameters
+                mocDeclaration.Replace(new Dictionary<string, ReplaceDelegate>
+                {
+                    {"parameters",(Selection input) =>
+                    {
+                        TranslateParameters(input);
+                        return input.Value;
+                    }},
+                });
+                //translate order
+                mocDeclaration.Replace("${modifiers} ${type} ${identifier}(${parameters})${block}");
+            }
+        }
+
+        private void TranslateParameters(Selection sel)
+        {
+            Debug(sel);
+            foreach (RSelection parameter in sel.Matches(PARAMETER))
+            {
+                //word translation
+                parameter.Replace(new Dictionary<string, ReplaceDelegate>
+                {
+                    {"type",(Selection input)=>
+                    {
+                        Debug(input);
+                        return TranslateType(input.Value);
+                    }},
+                });
+                //order translation
+                parameter.Replace("${type} ${identifier}");
+            }
+        }
+
+        //convert type to equivalent //todo
+        public string TranslateType(string type)
+        {
+            switch (type)
+            {
+                case "String": return "string";
+                case "Boolean": return "bool";
+            }
+            return type;
         }
 
         public void TranslateVariables(Selection sel)
@@ -221,16 +264,10 @@ namespace RgxC.Translators
                 //translate words
                 fieldDeclaration.Replace(new Dictionary<string, ReplaceDelegate>
                 {
-                    //convert type to equivalent //todo
                     {"type",(Selection input)=>
                     {
                         Debug(input);
-                        switch (input.Value)
-                        {
-                            case "String": return "string";
-                            case "Boolean": return "bool";
-                        }
-                        return input.Value;
+                        return TranslateType(input.Value);
                     }},
                 });
                 //translate order
