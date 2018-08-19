@@ -370,8 +370,8 @@ namespace RgxC.Translators
         {
             switch (type.Trim())
             {
-                case "String": return "string";
-                case "Boolean": return "bool";
+                //case "String": return "string";
+                //case "Boolean": return "bool";
             }
             if (type.StartsWith("Vector.")) return type.Remove(6, 1);//remove the dot
             return type;
