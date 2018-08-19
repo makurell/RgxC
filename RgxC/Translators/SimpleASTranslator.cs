@@ -390,18 +390,9 @@ namespace RgxC.Translators
                         Debug(input);
                         return TranslateType(input.Value);
                     }},
-                    {"modifiers",(Selection input)=>
-                    {
-                        Debug(input);
-                        if (fieldDeclaration.Group("constorvar").Value.Trim() == "const")
-                        {
-                            return input.Value.Replace("static","");
-                        }
-                        return TranslateType(input.Value);
-                    }},
                 });
                 //translate order
-                fieldDeclaration.Replace("${modifiers} " + (fieldDeclaration.Group("constorvar").Value == "const" ? "${constorvar} " : "") + "${type} ${identifier}${equals}${expr}${semicolon}\n");
+                fieldDeclaration.Replace("${modifiers} ${type} ${identifier}${equals}${expr}${semicolon}\n");
             }
         }
     }
