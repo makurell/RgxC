@@ -55,7 +55,9 @@
     <Compile Include="TranslatorDisplay.Designer.cs">
       <DependentUpon>TranslatorDisplay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Translators\ASTranslator.cs" />
     <Compile Include="Translators\GrammarTranslator.cs" />
+    <Compile Include="Translators\SimpleASTranslator2.cs" />
     <Compile Include="Translators\SimpleASTranslator.cs" />
     <Compile Include="Translators\TestTranslator.cs" />
   </ItemGroup>

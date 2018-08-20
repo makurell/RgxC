@@ -114,5 +114,44 @@ namespace LibSelection
             }
             this._len += q;
         }
+
+        public List<Selection> GetInverseSelections()
+        {
+            List<Selection> ret = new List<Selection>();
+            List<Selection> remSels = this.Children;
+            int prev = 0;
+            int i = 0;
+            while (true)
+            {
+                //check if i is in a sel, if is, then add len to i
+                foreach(Selection remsel in remSels)
+                {
+                    if (i >= remsel.Off && i<remsel.Off+remsel.Len)
+                    {
+                        //push to ret
+                        if (prev != i)
+                        {
+                            ret.Add(this.Sel(prev, i - prev));
+                        }
+                        //skip over this sel
+                        i += remsel.Len;
+                        prev = i;
+                        remSels.Remove(remsel);
+                        break;
+                    }
+                }
+                if (i == this.Len)
+                {
+                    //push to ret
+                    if (prev != i)
+                    {
+                        ret.Add(this.Sel(prev, i - prev));
+                    }
+                    break;//break while loop
+                }
+                i += 1;
+            }
+            return ret;
+        }
     }
 }

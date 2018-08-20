@@ -15,7 +15,17 @@ namespace RgxC
         [STAThread]
         static void Main(string[] args)
         {
-            new TranslatorDisplay<SimpleASTranslator>().ShowDialog();
+            //Selection root = new Selection("hey{innerBlock{c=\"{{}{}{}}{}}}}}}}\";}}");
+            //Selection def = root.Sel(0, 4);//hey{
+            //def.Replace("newMethodName{");
+            //Selection block = SimpleASTranslator2.GetToLevel(root, def, '{', '}', 0);
+            //Console.WriteLine(block);
+
+            Selection root = new Selection("buf already selected not selected");
+            Selection selected = root.Sel(4, 16);
+            var x = root.GetInverseSelections();
+            Console.WriteLine(x);
+            //new TranslatorDisplay<SimpleASTranslator2>().ShowDialog();
         }
     }
 }
