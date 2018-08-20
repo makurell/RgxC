@@ -60,7 +60,11 @@ namespace LibSelection
             {
                 if (_groupnames[i] == groupname)
                 {
-                    if (_groups[i] != null) return _groups[i];
+                    if (i < _groups.Count)
+                    {
+                        if (_groups[i] != null) return _groups[i];
+                        else return Selection.Empty;
+                    }
                     else return Selection.Empty;
                 }
             }

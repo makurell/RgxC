@@ -11,6 +11,8 @@ namespace RgxC.Translators
     public class SimpleASTranslator : Translator
     {
         public const string WS = @"\s*";
+        public const string WSP = @"\s+";
+        public const string ANY = @"[\s\S]*";
         public const string IDENTIFIER = @"[$a-zA-Z_][a-zA-Z0-9_]*";
         public const string IDENTIFIER_EXT = IDENTIFIER + "|" + @"[\<\>]*";
         public const string QUALIFIED_IDE = "((" + IDENTIFIER_EXT + ")" + "("+WS+"\\."+WS+"|)" + ")+";
@@ -132,9 +134,9 @@ namespace RgxC.Translators
 
         #region building helper methods
         /// <param name="plus">if true, cannot be empty</param>
-        public static string upto(char target, bool plus = false)
+        public static string upto(char target, bool plus = false, string additionalIllegal="")
         {
-            return r(c(STRING_LITERAL, REGEXP_LITERAL, "[^" + e("" + target) + "]"), plus);
+            return r(c(STRING_LITERAL, REGEXP_LITERAL, "[^" + e("" + target) +additionalIllegal+ "]"), plus);
         }
         #endregion
 
@@ -164,7 +166,7 @@ namespace RgxC.Translators
                 n("modifiers", r(MODIFIERS)),
                     n("constorvar", CONST_OR_VAR),
                     n("identifier", IDENTIFIER), o(TYPE_RELATION),
-                    o(b(n("equals", "="), n("expr", upto(';')))),
+                    o(b(n("equals", "="), n("expr", upto(';',true)))),
                     n("semicolon", ";")
                 );
             }
@@ -193,8 +195,8 @@ namespace RgxC.Translators
             {
                 return b(
                 n("modifiers", r(MODIFIERS)),
-                "function",
-                o(c("get", "set")),
+                b("function",WSP),
+                //o(b(c("get", "set"),WSP)),
                 n("identifier", IDENTIFIER),
                 e("("),
                 n("parameters",upto(')')),
@@ -246,6 +248,18 @@ namespace RgxC.Translators
                     );
             }
         }
+        /// <summary>
+        /// left,right
+        /// </summary>
+        string SIMPLE_ASSIGNMENT
+        {
+            get
+            {
+                return b(
+                    n("left",upto('=',true,";")),"=",n("right",upto(';',true,"=")),";"
+                    );
+            }
+        }
         #endregion
 
         public override void Translate()
@@ -255,6 +269,7 @@ namespace RgxC.Translators
             TranslateClassDeclaration(Root);
             TranslateMethodOrConstructors(Root);
             TranslateVariables(Root);
+            TranslateAssignments(Root);
         }
 
         private void TranslateClassDeclaration(Selection sel)
@@ -309,7 +324,6 @@ namespace RgxC.Translators
 
         private void TranslateMethodOrConstructors(Selection sel)
         {
-            Console.WriteLine(METHOD_OR_CONSTRUCTOR_DECLARATION);
             foreach(RSelection mocDeclaration in sel.Matches(METHOD_OR_CONSTRUCTOR_DECLARATION))
             {
                 Debug(mocDeclaration);
@@ -342,8 +356,31 @@ namespace RgxC.Translators
         {
             //get inside the brackets
             Selection block = sel.Match(b("{",n("block",upto('}')),"}")).Group("block");
-            TranslateVariables(block);
+            foreach(RSelection statement in block.Matches(
+                b(upto(';'),";")
+                ))
+            {
+                TranslateVariables(statement);
+                TranslateAssignments(statement);
+            }
             sel.Replace("{\n" + block.Value + "}");
+        }
+
+        private void TranslateAssignments(Selection sel)
+        {
+            //simple assignment
+            foreach(RSelection assignment in sel.Matches(SIMPLE_ASSIGNMENT))
+            {
+                assignment.Replace(new Dictionary<string, ReplaceDelegate>()
+                {
+                    {"right",(Selection right) =>
+                    {
+                        Debug(right);
+                        TranslateExpr(right);
+                        return right.Value;
+                    }}
+                });
+            }
         }
 
         private void TranslateParameters(Selection sel)
@@ -390,10 +427,55 @@ namespace RgxC.Translators
                         Debug(input);
                         return TranslateType(input.Value);
                     }},
+                    {"expr",(Selection input)=>
+                    {
+                        Debug(input);
+                        TranslateExpr(input);
+                        return input.Value;
+                    }},
                 });
                 //translate order
                 fieldDeclaration.Replace("${modifiers} ${type} ${identifier}${equals}${expr}${semicolon}\n");
             }
+        }
+
+        private void TranslateExpr(Selection input)
+        {
+            string value = input.Value;
+            //ltrim
+            input.Match("^" + WS, RegexOptions.Multiline).Replace("");
+            //rtrim
+            input.Match(WS + "$", RegexOptions.Multiline).Replace("");
+
+            //xml direct accessing -> indexer accessing
+            foreach (RSelection xmlAccSel in input.Matches(b(
+                "xml",n("parts",r(b(WS, e("."), WS, IDENTIFIER), true))
+                )))
+            {
+                xmlAccSel.Replace(new Dictionary<string, ReplaceDelegate>()
+                {
+                    {"parts",(Selection parts)=>{
+                        foreach(RSelection part in parts.Matches(b(WS, e("."), WS, n("identifier",IDENTIFIER))))
+                        {
+                            part.Replace("[\"${identifier}\"]");
+                        }
+                        return parts.Value;
+                    }}
+                });
+            }
+
+            //attribute operator
+            foreach(RSelection attrSel in input.Matches(b(
+                e("."),e("@"),n("identifier",IDENTIFIER)
+                )))
+            {
+                attrSel.Replace(".attr(\"${identifier}\")");
+            }
+
+            //casting to parsing
+            RSelection castSel = input.Match(b("^" + n("type", IDENTIFIER), n("rest", e("(") + ANY)) + "$");
+            string castSelType = castSel.Group("type").Value;
+            if(!string.IsNullOrWhiteSpace(castSelType))castSel.Replace("${rest}.to" + char.ToUpper(castSelType[0])+castSelType.Substring(1)+"()");
         }
     }
 }
