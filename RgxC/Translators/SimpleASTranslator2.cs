@@ -40,7 +40,8 @@ namespace RgxC.Translators
                 e("("),
                 n("parameters", upto(')')),
                 e(")"),
-                o(TYPE_RELATION)
+                o(TYPE_RELATION),
+                "{"
                 );
             }
         }
@@ -70,7 +71,16 @@ namespace RgxC.Translators
                 {
                     curOff += rgxMatch.Length;
                 }
-                char c = root.Value[startOffset + curOff];
+                char c;
+                try
+                {
+                    c = root.Value[startOffset + curOff];
+                }
+                catch(IndexOutOfRangeException ex)
+                {
+                    //EOF and not returned to targetLevel!
+                    throw new ParsingException("EOF without reaching target level ("+targetLevel+") - Could not find corresponding closing bracket for bracket",root.GetLoc(startOffset),ex);
+                }
                 if (c == openBrac)
                 {
                     curLevel += 1;
@@ -91,14 +101,25 @@ namespace RgxC.Translators
         public override void Translate()
         {
             TranslateMethods(Root);
+            //now handle outside methods
+            Console.WriteLine("Outside Stuff: -------------");
+            foreach (Selection outsideSel in Root.GetInverseSelections())
+            {
+                Console.WriteLine(outsideSel.Value);
+            }
         }
 
         public void TranslateMethods(Selection root)
         {
-            //return list of excess selections
             foreach(RSelection methodStart in root.Matches(METHOD_OR_CONSTRUCTOR_START))
             {
-
+                Console.WriteLine("Inside method: " + methodStart.Value + " -----------------");
+                //get block (sel everything until level 0 of brackets)
+                Selection block = GetToLevel(root, methodStart, '{', '}');
+                Console.WriteLine(block.Value);
+                //consume ending bracket
+                Selection endBracket = root.Sel(block.Off + block.Len, 1);
+                Console.WriteLine(endBracket.Value);
             }
         }
     }

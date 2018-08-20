@@ -22,7 +22,7 @@ namespace LibSelection
 
         public Selection(string value)
         {
-            this.Value = value.Replace("\r\n", "\n").Replace("\r", "\n");
+            this.Value = value;//.Replace("\r\n", "\n").Replace("\r", "\n");
             this._len = value.Length;
         }
 
@@ -38,7 +38,7 @@ namespace LibSelection
             return curoff;
         }
 
-        public Tuple<int, int, string> GetLoc(int off = 0, int around = 10)
+        public Tuple<int, int, string> GetLoc(int off = 0, int around = 30)
         {
             int curoff = _off + off;
             Selection cursel = this;
@@ -49,7 +49,7 @@ namespace LibSelection
             }
 
             string fullval = cursel.Value;
-            string preview = (fullval.Substring(Math.Max(0, curoff - around), Math.Min(around, curoff)) + "^" + fullval.Substring(curoff, Math.Min(around, fullval.Length - curoff))).Replace("  ", "").Replace("\n", "");
+            string preview = (fullval.Substring(Math.Max(0, curoff - around), Math.Min(around, curoff)) + "@" + fullval.Substring(curoff, Math.Min(around, fullval.Length - curoff))).Replace("  ", "").Replace("\n", "");
 
             int curLineno = 1;
             int lasti = 0;
@@ -118,7 +118,12 @@ namespace LibSelection
         public List<Selection> GetInverseSelections()
         {
             List<Selection> ret = new List<Selection>();
-            List<Selection> remSels = this.Children;
+            List<Selection> remSels = new List<Selection>();
+            foreach(Selection child in this.Children)
+            {
+                remSels.Add(child);
+            }
+
             int prev = 0;
             int i = 0;
             while (true)
@@ -140,7 +145,7 @@ namespace LibSelection
                         break;
                     }
                 }
-                if (i == this.Len)
+                if (i >= this.Len)
                 {
                     //push to ret
                     if (prev != i)

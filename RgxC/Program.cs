@@ -21,11 +21,12 @@ namespace RgxC
             //Selection block = SimpleASTranslator2.GetToLevel(root, def, '{', '}', 0);
             //Console.WriteLine(block);
 
-            Selection root = new Selection("buf already selected not selected");
-            Selection selected = root.Sel(4, 16);
-            var x = root.GetInverseSelections();
-            Console.WriteLine(x);
-            //new TranslatorDisplay<SimpleASTranslator2>().ShowDialog();
+            //Selection root = new Selection("buf already selected not selected");
+            //Selection selected = root.Sel(4, 16);
+            //var x = root.GetInverseSelections();
+            //Console.WriteLine(x);
+
+            new TranslatorDisplay<SimpleASTranslator2>().ShowDialog();
         }
     }
 }

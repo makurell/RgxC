@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="ASTranslator\ASTranslator.cs" />
     <Compile Include="ASTranslator\Grammar.cs" />
+    <Compile Include="ParsingException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Translator.cs" />

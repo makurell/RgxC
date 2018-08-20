@@ -27,10 +27,18 @@ namespace RgxC
             _translator = new T().Setup(textBox1.Text);
             _translator.OnDebug += _translator_OnDebug;
             new System.Threading.Thread(() => {
-                _translator.Translate();
+                string output = "";
+                try
+                {
+                    _translator.Translate();
+                    output = _translator.Value;
+                }catch(Exception ex)
+                {
+                    output = ex.ToString();
+                }
                 StringBuilder sb = new StringBuilder();
                 sb.Append("<!DOCTYPE html white-space:pre><html><head><script>function scroll(){document.getElementById(\"sel\").scrollIntoView(true);}</script><style>body{font-family: Consolas;white-space:PRE;font-size: 12px;}</style></head><body>");
-                sb.Append(_translator.Value.Replace(@"&", @"&amp;").Replace(@"<", @"&lt;").Replace(@">", @"&gt;").Replace(@"'", @"&#39;").Replace(@"""", @"&quot;").Replace("\n", "<br>"));
+                sb.Append(output.Replace(@"&", @"&amp;").Replace(@"<", @"&lt;").Replace(@">", @"&gt;").Replace(@"'", @"&#39;").Replace(@"""", @"&quot;").Replace("\n", "<br>"));
                 sb.Append("</body></html>");
                 this.Invoke(new Action(() =>
                 {
