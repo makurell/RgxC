@@ -102,10 +102,8 @@ namespace RgxC.Translators
         {
             TranslateMethods(Root);
             //now handle outside methods
-            Console.WriteLine("Outside Stuff: -------------");
             foreach (Selection outsideSel in Root.GetInverseSelections())
             {
-                Console.WriteLine(outsideSel.Value);
             }
         }
 
@@ -113,13 +111,10 @@ namespace RgxC.Translators
         {
             foreach(RSelection methodStart in root.Matches(METHOD_OR_CONSTRUCTOR_START))
             {
-                Console.WriteLine("Inside method: " + methodStart.Value + " -----------------");
                 //get block (sel everything until level 0 of brackets)
                 Selection block = GetToLevel(root, methodStart, '{', '}');
-                Console.WriteLine(block.Value);
                 //consume ending bracket
                 Selection endBracket = root.Sel(block.Off + block.Len, 1);
-                Console.WriteLine(endBracket.Value);
             }
         }
     }
