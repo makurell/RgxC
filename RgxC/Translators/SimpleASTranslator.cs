@@ -449,7 +449,7 @@ namespace RgxC.Translators
 
             //xml direct accessing -> indexer accessing
             foreach (RSelection xmlAccSel in input.Matches(b(
-                "xml",n("parts",r(b(WS, e("."), WS, IDENTIFIER), true))
+                @"xml([A-Z]\w+|)",n("parts",r(b(WS, e("."), WS, IDENTIFIER), true))
                 )))
             {
                 xmlAccSel.Replace(new Dictionary<string, ReplaceDelegate>()
@@ -457,6 +457,7 @@ namespace RgxC.Translators
                     {"parts",(Selection parts)=>{
                         foreach(RSelection part in parts.Matches(b(WS, e("."), WS, n("identifier",IDENTIFIER))))
                         {
+                            if(part.Group("identifier").Value.Trim()!="hasOwnProperty")
                             part.Replace("[\"${identifier}\"]");
                         }
                         return parts.Value;
