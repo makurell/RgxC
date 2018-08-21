@@ -38,6 +38,16 @@ namespace LibSelection
             return curoff;
         }
 
+        public Selection GetRoot()
+        {
+            Selection cursel = this;
+            while (cursel.Parent != null)
+            {
+                cursel = cursel.Parent;
+            }
+            return cursel;
+        }
+
         public Tuple<int, int, string> GetLoc(int off = 0, int around = 30)
         {
             int curoff = _off + off;

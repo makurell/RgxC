@@ -46,6 +46,20 @@ namespace RgxC.Translators
             }
         }
         /// <summary>
+        /// import
+        /// </summary>
+        string DIRECTIVE
+        {
+            get
+            {
+                //todo: annotationFields
+                return c(
+                    b(n("import", "import"), TYPE, o(b(e("."), e("*")))),
+                    b("use", IDENTIFIER, TYPE)
+                    );
+            }
+        }
+        /// <summary>
         /// packageide
         /// </summary>
         string PACKAGE_DECLARATION
@@ -122,6 +136,7 @@ namespace RgxC.Translators
                 {
                     Console.WriteLine(outsideSel.Value);
                     TranslatePackageDeclarations(outsideSel);
+                    TranslateDirectives(outsideSel);
                 }
             }
             Debug(Root);
@@ -138,6 +153,22 @@ namespace RgxC.Translators
                 Debug(multiline);
             }
             //(just select them, don't do anything to them)
+        }
+
+        private void TranslateDirectives(Selection sel)
+        {
+            //todo more cases
+            foreach (RSelection directive in sel.Matches(DIRECTIVE))
+            {
+                Debug(directive);
+                if (directive.Value.Trim().StartsWith("import"))
+                {
+                    directive.Replace(new Dictionary<string, string>()
+                    {
+                        {"import", "using"}
+                    });
+                }
+            }
         }
 
         private void TranslatePackageDeclarations(Selection root)
