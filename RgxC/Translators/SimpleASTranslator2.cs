@@ -69,6 +69,20 @@ namespace RgxC.Translators
                 return b("package", n("packageide", o(QUALIFIED_IDE)),"{");
             }
         }
+        /// <summary>
+        /// modifiers, identifier, (extension)type, impls
+        /// </summary>
+        string CLASS_DECLARATION
+        {
+            get
+            {
+                return b(
+                    n("modifiers", MODIFIERS), "class", n("identifier", IDENTIFIER),
+                    o(b("extends", TYPE)),
+                    o(b("implements", n("impls", upto('{'))))
+                    );
+            }
+        }
         #endregion
 
         #region parsing helper methods
@@ -137,6 +151,7 @@ namespace RgxC.Translators
                     Console.WriteLine(outsideSel.Value);
                     TranslatePackageDeclarations(outsideSel);
                     TranslateDirectives(outsideSel);
+                    TranslateClassDeclaration(outsideSel);
                 }
             }
             Debug(Root);
@@ -153,6 +168,34 @@ namespace RgxC.Translators
                 Debug(multiline);
             }
             //(just select them, don't do anything to them)
+        }
+
+        private void TranslateClassDeclaration(Selection sel)
+        {
+            foreach (RSelection classDeclaration in sel.Matches(CLASS_DECLARATION))
+            {
+                Debug(classDeclaration);
+                StringBuilder repl = new StringBuilder();
+                repl.Append("${modifiers} class ${identifier}");
+                StringBuilder inherits = new StringBuilder();
+                if (classDeclaration.Group("type") != Selection.Empty)
+                {
+                    inherits.Append(classDeclaration.Group("type").Value.Trim());
+                }
+                if (classDeclaration.Group("impls") != Selection.Empty)
+                {
+                    if (!String.IsNullOrWhiteSpace(inherits.ToString()))
+                    {
+                        inherits.Append(",");
+                    }
+                    inherits.Append(classDeclaration.Group("impls").Value.Trim());
+                }
+                if (!String.IsNullOrWhiteSpace(inherits.ToString()))
+                {
+                    repl.Append(":" + inherits.ToString());
+                }
+                classDeclaration.Replace(repl.ToString());
+            }
         }
 
         private void TranslateDirectives(Selection sel)
