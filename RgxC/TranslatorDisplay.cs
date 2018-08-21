@@ -13,7 +13,7 @@ namespace RgxC
 {
     public partial class TranslatorDisplay<T> : Form where T : Translator, new()
     {
-        public bool fastMode = true;
+        public bool fastMode = false;
         public bool autoMode = true;
         public static string[] colours = new string[] { "indianred","hotpink","tomato","orchid","blueviolet","mediumslateblue","limegreen","mediumseagreen","steelblue","sandybrown"};
         Translator _translator = null;
@@ -151,7 +151,7 @@ namespace RgxC
                 }
 
                 sb.Append("</body></html>");
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(1000);
             }
 
             if (/*selstart % 50 < 5 || */!fastMode)
